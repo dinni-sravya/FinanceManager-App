@@ -7,14 +7,29 @@
 <body>
 
   <div class="dashboard-container">
-    <h2>Expense Dashboard</h2>  
-    <form id="expenseForm">
-      <input type="text" id="title" placeholder="Expense title" required>
-      <input type="number" id="amount" placeholder="Amount" required>
-      <button type="submit">Add Expense</button>
-    </form>
 
-    <ul id="expenseList"></ul>
+    <!-- Balance Card -->
+    <div class="balance-card">
+      <h3>Current Balance</h3>
+      <h2 id="balance">₹0</h2>
+    </div>
+
+    <!-- Expense Form -->
+    <div class="form-card">
+      <h3>Add Expense</h3>
+      <form id="expenseForm">
+        <input type="text" id="title" placeholder="Expense title" required>
+        <input type="number" id="amount" placeholder="Amount" required>
+        <button type="submit">Add Expense</button>
+      </form>
+    </div>
+
+    <!-- Expense List -->
+    <div class="list-card">
+      <h3>Expense History</h3>
+      <ul id="expenseList"></ul>
+    </div>
+
   </div>
 
   <script src="js/dashboard.js"></script>

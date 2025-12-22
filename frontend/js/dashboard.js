@@ -1,17 +1,27 @@
 // Store all expenses
 let expenses = [];
 
-// Get form
+// Get HTML elements
+const balanceEl = document.getElementById("balance");
 const expenseForm = document.getElementById("expenseForm");
+const titleInput = document.getElementById("title");
+const amountInput = document.getElementById("amount");
+const expenseList = document.getElementById("expenseList");
 
-// Listen for submit
-expenseForm.addEventListener("submit", function (event) {
-  event.preventDefault();   // stop refresh  page
+// Initial balance
+let balance = 0;
 
+// Form submit event
+expenseForm.addEventListener("submit", function (e) {
+  e.preventDefault(); // stop page refresh
 
-  // Read inputs
-  const title = document.getElementById("title").value;
-  const amount = document.getElementById("amount").value;
+  const title = titleInput.value.trim();
+  const amount = Number(amountInput.value);
+
+  if (title === "" || amount <= 0) {
+    alert("Please enter valid details");
+    return;
+  }
 
   // Create expense object
   const expense = {
@@ -19,24 +29,29 @@ expenseForm.addEventListener("submit", function (event) {
     amount: amount
   };
 
-  // Add to array
   expenses.push(expense);
+  balance -= amount;
 
-  // Show expenses
+  updateBalance();
   displayExpenses();
 
   // Clear inputs
-  expenseForm.reset();
+  titleInput.value = "";
+  amountInput.value = "";
 });
 
-// Display expenses on screen
-function displayExpenses() {
-  const list = document.getElementById("expenseList");
-  list.innerHTML = "";
+// Update balance on UI
+function updateBalance() {
+  balanceEl.textContent = "₹" + balance;
+}
 
-  for (let i = 0; i < expenses.length; i++) {
+// Display expenses in list
+function displayExpenses() {
+  expenseList.innerHTML = "";
+
+  expenses.forEach(function (expense) {
     const li = document.createElement("li");
-    li.textContent = expenses[i].title + " - ₹" + expenses[i].amount;
-    list.appendChild(li);
-  }
+    li.textContent = expense.title + " - ₹" + expense.amount;
+    expenseList.appendChild(li);
+  });
 }
