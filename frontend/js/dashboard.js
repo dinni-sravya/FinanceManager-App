@@ -1,57 +1,62 @@
-// Store all expenses
-let expenses = [];
-
-// Get HTML elements
-const balanceEl = document.getElementById("balance");
-const expenseForm = document.getElementById("expenseForm");
-const titleInput = document.getElementById("title");
-const amountInput = document.getElementById("amount");
-const expenseList = document.getElementById("expenseList");
-
-// Initial balance
+let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
 let balance = 0;
 
-// Form submit event
+const balanceEl = document.getElementById("balance");
+const expenseForm = document.getElementById("expenseForm");
+const expenseList = document.getElementById("expenseList");
+
+/* Load saved data */
+renderExpenses();
+
+/* Add Expense */
 expenseForm.addEventListener("submit", function (e) {
-  e.preventDefault(); // stop page refresh
+  e.preventDefault();
 
-  const title = titleInput.value.trim();
-  const amount = Number(amountInput.value);
+  const title = document.getElementById("title").value;
+  const amount = Number(document.getElementById("amount").value);
 
-  if (title === "" || amount <= 0) {
-    alert("Please enter valid details");
-    return;
-  }
-
-  // Create expense object
   const expense = {
+    id: Date.now(),
     title: title,
-    amount: amount
+    amount: amount,
+    date: new Date().toLocaleDateString()
   };
 
   expenses.push(expense);
-  balance -= amount;
+  saveData();
+  renderExpenses();
 
-  updateBalance();
-  displayExpenses();
-
-  // Clear inputs
-  titleInput.value = "";
-  amountInput.value = "";
+  expenseForm.reset();
 });
 
-// Update balance on UI
-function updateBalance() {
-  balanceEl.textContent = "₹" + balance;
-}
-
-// Display expenses in list
-function displayExpenses() {
+/* Render expenses */
+function renderExpenses() {
   expenseList.innerHTML = "";
+  balance = 0;
 
-  expenses.forEach(function (expense) {
+  expenses.forEach(exp => {
+    balance -= exp.amount;
+
     const li = document.createElement("li");
-    li.textContent = expense.title + " - ₹" + expense.amount;
+    li.innerHTML = `
+      <span>${exp.title} - ₹${exp.amount} <small>(${exp.date})</small></span>
+      <button onclick="deleteExpense(${exp.id})">❌</button>
+    `;
+
     expenseList.appendChild(li);
   });
+
+  balanceEl.innerText = `₹${balance}`;
+}
+
+/* Delete expense */
+function deleteExpense(id) {
+  expenses = expenses.filter(exp => exp.id !== id);
+  saveData();
+  renderExpenses();
+}
+
+/* Save to localStorage */
+function saveData() {
+  localStorage.setItem("expenses", JSON.stringify(expenses));
 }

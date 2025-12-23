@@ -285,3 +285,19 @@ body {
     grid-column: span 2;
   }
 }
+
+
+#expenseList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#expenseList button {
+  background: crimson;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
