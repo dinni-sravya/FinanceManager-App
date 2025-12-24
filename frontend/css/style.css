@@ -301,3 +301,31 @@ body {
   border-radius: 4px;
   cursor: pointer;
 }
+
+
+/* ===== DAY 10 DASHBOARD ENHANCEMENTS ===== */
+
+.summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 15px 0;
+  font-size: 14px;
+}
+
+.summary button {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#filterDate {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}

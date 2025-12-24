@@ -1,79 +1,80 @@
-// ===============================
-// DAY 9 – PERSISTENT EXPENSE LOGIC
-// ===============================
-
-// ---- GET HTML ELEMENTS ----
+// ===== GET ELEMENTS =====
 const expenseForm = document.getElementById("expenseForm");
 const titleInput = document.getElementById("title");
 const amountInput = document.getElementById("amount");
 const expenseList = document.getElementById("expenseList");
 const balanceEl = document.getElementById("balance");
+const totalCountEl = document.getElementById("totalCount");
+const filterDate = document.getElementById("filterDate");
+const clearAllBtn = document.getElementById("clearAll");
 
-// ---- LOAD EXPENSES FROM LOCAL STORAGE ----
+// ===== LOAD STORAGE =====
 let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
 
-// ---- HANDLE FORM SUBMIT ----
-expenseForm.addEventListener("submit", function (e) {
+// ===== FORM SUBMIT =====
+expenseForm.addEventListener("submit", e => {
   e.preventDefault();
-
-  const title = titleInput.value.trim();
-  const amount = Number(amountInput.value);
-
-  if (title === "" || amount <= 0) return;
 
   const expense = {
     id: Date.now(),
-    title: title,
-    amount: amount,
+    title: titleInput.value.trim(),
+    amount: Number(amountInput.value),
     date: new Date().toLocaleDateString()
   };
 
+  if (!expense.title || expense.amount <= 0) return;
+
   expenses.push(expense);
   saveAndRender();
-
   expenseForm.reset();
 });
 
-// ---- SAVE TO LOCAL STORAGE + RENDER ----
+// ===== SAVE & RENDER =====
 function saveAndRender() {
   localStorage.setItem("expenses", JSON.stringify(expenses));
-  renderExpenses();
+  renderExpenses(expenses);
 }
 
-// ---- DISPLAY EXPENSE LIST ----
-function renderExpenses() {
+// ===== RENDER =====
+function renderExpenses(list) {
   expenseList.innerHTML = "";
+  let total = 0;
 
-  expenses.forEach((expense, index) => {
+  list.forEach((exp, index) => {
+    total += exp.amount;
+
     const li = document.createElement("li");
-
     li.innerHTML = `
-      <span>${expense.title} - ₹${expense.amount}</span>
+      ${exp.title} - ₹${exp.amount}
       <button onclick="deleteExpense(${index})">❌</button>
     `;
-
     expenseList.appendChild(li);
   });
 
-  updateBalance();
+  balanceEl.textContent = "₹" + total;
+  totalCountEl.textContent = list.length;
 }
 
-// ---- DELETE EXPENSE ----
+// ===== DELETE =====
 function deleteExpense(index) {
   expenses.splice(index, 1);
   saveAndRender();
 }
 
-// ---- UPDATE TOTAL BALANCE ----
-function updateBalance() {
-  let total = 0;
+// ===== FILTER BY DATE =====
+filterDate.addEventListener("change", () => {
+  const selected = new Date(filterDate.value).toLocaleDateString();
+  const filtered = expenses.filter(e => e.date === selected);
+  renderExpenses(filtered);
+});
 
-  expenses.forEach(expense => {
-    total += expense.amount;
-  });
+// ===== CLEAR ALL =====
+clearAllBtn.addEventListener("click", () => {
+  if (confirm("Clear all expenses?")) {
+    expenses = [];
+    saveAndRender();
+  }
+});
 
-  balanceEl.textContent = "₹" + total;
-}
-
-// ---- INITIAL LOAD ----
-renderExpenses();
+// ===== INIT =====
+renderExpenses(expenses);
