@@ -1,19 +1,25 @@
-// ===== GET HTML ELEMENTS =====
+// ===============================
+// DAY 9 – PERSISTENT EXPENSE LOGIC
+// ===============================
+
+// ---- GET HTML ELEMENTS ----
 const expenseForm = document.getElementById("expenseForm");
 const titleInput = document.getElementById("title");
 const amountInput = document.getElementById("amount");
 const expenseList = document.getElementById("expenseList");
 const balanceEl = document.getElementById("balance");
 
-// ===== LOAD FROM LOCAL STORAGE =====
+// ---- LOAD EXPENSES FROM LOCAL STORAGE ----
 let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
 
-// ===== ADD EXPENSE =====
+// ---- HANDLE FORM SUBMIT ----
 expenseForm.addEventListener("submit", function (e) {
   e.preventDefault();
 
-  const title = titleInput.value;
+  const title = titleInput.value.trim();
   const amount = Number(amountInput.value);
+
+  if (title === "" || amount <= 0) return;
 
   const expense = {
     id: Date.now(),
@@ -23,13 +29,18 @@ expenseForm.addEventListener("submit", function (e) {
   };
 
   expenses.push(expense);
-  localStorage.setItem("expenses", JSON.stringify(expenses));
+  saveAndRender();
 
-  renderExpenses();
   expenseForm.reset();
 });
 
-// ===== RENDER EXPENSES =====
+// ---- SAVE TO LOCAL STORAGE + RENDER ----
+function saveAndRender() {
+  localStorage.setItem("expenses", JSON.stringify(expenses));
+  renderExpenses();
+}
+
+// ---- DISPLAY EXPENSE LIST ----
 function renderExpenses() {
   expenseList.innerHTML = "";
 
@@ -37,7 +48,7 @@ function renderExpenses() {
     const li = document.createElement("li");
 
     li.innerHTML = `
-      ${expense.title} - ₹${expense.amount}
+      <span>${expense.title} - ₹${expense.amount}</span>
       <button onclick="deleteExpense(${index})">❌</button>
     `;
 
@@ -47,23 +58,22 @@ function renderExpenses() {
   updateBalance();
 }
 
-// ===== DELETE EXPENSE =====
+// ---- DELETE EXPENSE ----
 function deleteExpense(index) {
   expenses.splice(index, 1);
-  localStorage.setItem("expenses", JSON.stringify(expenses));
-  renderExpenses();
+  saveAndRender();
 }
 
-// ===== UPDATE BALANCE =====
+// ---- UPDATE TOTAL BALANCE ----
 function updateBalance() {
   let total = 0;
 
-  expenses.forEach(exp => {
-    total += exp.amount;
+  expenses.forEach(expense => {
+    total += expense.amount;
   });
 
   balanceEl.textContent = "₹" + total;
 }
 
-// ===== INITIAL LOAD =====
+// ---- INITIAL LOAD ----
 renderExpenses();
