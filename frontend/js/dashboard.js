@@ -1,20 +1,16 @@
-// Load saved expenses when page loads
-let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
-
-// Select required elements
+// ===== GET HTML ELEMENTS =====
 const expenseForm = document.getElementById("expenseForm");
 const titleInput = document.getElementById("title");
 const amountInput = document.getElementById("amount");
 const expenseList = document.getElementById("expenseList");
 const balanceEl = document.getElementById("balance");
 
-// Show existing expenses
-displayExpenses();
-updateBalance();
+// ===== LOAD FROM LOCAL STORAGE =====
+let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
 
-// Handle form submit
-expenseForm.addEventListener("submit", function (event) {
-  event.preventDefault();
+// ===== ADD EXPENSE =====
+expenseForm.addEventListener("submit", function (e) {
+  e.preventDefault();
 
   const title = titleInput.value;
   const amount = Number(amountInput.value);
@@ -27,37 +23,47 @@ expenseForm.addEventListener("submit", function (event) {
   };
 
   expenses.push(expense);
-  saveExpenses();
+  localStorage.setItem("expenses", JSON.stringify(expenses));
 
-  titleInput.value = "";
-  amountInput.value = "";
+  renderExpenses();
+  expenseForm.reset();
 });
 
-// Save expenses
-function saveExpenses() {
-  localStorage.setItem("expenses", JSON.stringify(expenses));
-  displayExpenses();
+// ===== RENDER EXPENSES =====
+function renderExpenses() {
+  expenseList.innerHTML = "";
+
+  expenses.forEach((expense, index) => {
+    const li = document.createElement("li");
+
+    li.innerHTML = `
+      ${expense.title} - ₹${expense.amount}
+      <button onclick="deleteExpense(${index})">❌</button>
+    `;
+
+    expenseList.appendChild(li);
+  });
+
   updateBalance();
 }
 
-// Display expenses
-function displayExpenses() {
-  expenseList.innerHTML = "";
-
-  expenses.forEach(function (expense) {
-    const li = document.createElement("li");
-    li.textContent = `${expense.title} - ₹${expense.amount} (${expense.date})`;
-    expenseList.appendChild(li);
-  });
+// ===== DELETE EXPENSE =====
+function deleteExpense(index) {
+  expenses.splice(index, 1);
+  localStorage.setItem("expenses", JSON.stringify(expenses));
+  renderExpenses();
 }
 
-// Update balance
+// ===== UPDATE BALANCE =====
 function updateBalance() {
   let total = 0;
 
-  expenses.forEach(function (expense) {
-    total += expense.amount;
+  expenses.forEach(exp => {
+    total += exp.amount;
   });
 
-  balanceEl.textContent = `₹${total}`;
+  balanceEl.textContent = "₹" + total;
 }
+
+// ===== INITIAL LOAD =====
+renderExpenses();
