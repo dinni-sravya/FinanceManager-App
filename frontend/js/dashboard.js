@@ -1,19 +1,23 @@
+// Load saved expenses when page loads
 let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
-let balance = 0;
 
-const balanceEl = document.getElementById("balance");
+// Select required elements
 const expenseForm = document.getElementById("expenseForm");
+const titleInput = document.getElementById("title");
+const amountInput = document.getElementById("amount");
 const expenseList = document.getElementById("expenseList");
+const balanceEl = document.getElementById("balance");
 
-/* Load saved data */
-renderExpenses();
+// Show existing expenses
+displayExpenses();
+updateBalance();
 
-/* Add Expense */
-expenseForm.addEventListener("submit", function (e) {
-  e.preventDefault();
+// Handle form submit
+expenseForm.addEventListener("submit", function (event) {
+  event.preventDefault();
 
-  const title = document.getElementById("title").value;
-  const amount = Number(document.getElementById("amount").value);
+  const title = titleInput.value;
+  const amount = Number(amountInput.value);
 
   const expense = {
     id: Date.now(),
@@ -23,40 +27,37 @@ expenseForm.addEventListener("submit", function (e) {
   };
 
   expenses.push(expense);
-  saveData();
-  renderExpenses();
+  saveExpenses();
 
-  expenseForm.reset();
+  titleInput.value = "";
+  amountInput.value = "";
 });
 
-/* Render expenses */
-function renderExpenses() {
+// Save expenses
+function saveExpenses() {
+  localStorage.setItem("expenses", JSON.stringify(expenses));
+  displayExpenses();
+  updateBalance();
+}
+
+// Display expenses
+function displayExpenses() {
   expenseList.innerHTML = "";
-  balance = 0;
 
-  expenses.forEach(exp => {
-    balance -= exp.amount;
-
+  expenses.forEach(function (expense) {
     const li = document.createElement("li");
-    li.innerHTML = `
-      <span>${exp.title} - ₹${exp.amount} <small>(${exp.date})</small></span>
-      <button onclick="deleteExpense(${exp.id})">❌</button>
-    `;
-
+    li.textContent = `${expense.title} - ₹${expense.amount} (${expense.date})`;
     expenseList.appendChild(li);
   });
-
-  balanceEl.innerText = `₹${balance}`;
 }
 
-/* Delete expense */
-function deleteExpense(id) {
-  expenses = expenses.filter(exp => exp.id !== id);
-  saveData();
-  renderExpenses();
-}
+// Update balance
+function updateBalance() {
+  let total = 0;
 
-/* Save to localStorage */
-function saveData() {
-  localStorage.setItem("expenses", JSON.stringify(expenses));
+  expenses.forEach(function (expense) {
+    total += expense.amount;
+  });
+
+  balanceEl.textContent = `₹${total}`;
 }
