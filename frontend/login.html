@@ -1,29 +1,29 @@
-<!DOCTYPE html> <!-- tells the browser this is HTML5 -->
-<html lang="en"> <!-- starts the HTML page -->
-
-<head> <!-- page information -->
-  <title>Login | Finance Manager</title> <!-- browser tab text -->
-  <link rel="stylesheet" href="css/style.css"> <!-- connects CSS -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login | Finance Manager</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
+<body>
 
-<body> <!-- visible content -->
-
-  <div class="login-container"> <!-- login card -->
-
+  <div class="login-container">
     <h2>Welcome Back</h2>
     <p class="tagline">Track your money smartly</p>
 
     <form id="loginForm">
-       <input type="email" id="email" placeholder="Enter email" required>
-       <input type="password" id="password" placeholder="Enter password" required>
-       <button type="submit">Sign In</button>
+        <input type="email" id="email" placeholder="Enter email" required>
+        <input type="password" id="password" placeholder="Enter password" required>
+        
+        <button type="submit">Sign In</button>
     </form>
-<script src="js/auth.js"></script>
+
     <div class="extra-links">
       <p>Don't have an account? <a href="register.html">Sign Up</a></p>
     </div>
-
   </div>
+
+  <script src="js/auth.js"></script>
 
 </body>
 </html>

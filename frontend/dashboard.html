@@ -1,7 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard | Finance Manager</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -9,30 +10,57 @@
 
   <div class="dashboard-container">
 
-    <!-- Balance Card -->
     <div class="balance-card">
-      <h3>Current Balance</h3>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <h3>Current Balance</h3>
+        <button id="logoutBtn" style="background:none; border:none; color:#ef4444; cursor:pointer; font-weight:600; font-size: 14px;">Logout ⏻</button>
+      </div>
+      
       <h2 id="balance">₹0</h2>
+      
       <div class="summary">
-  <p>Total Expenses: <span id="totalCount">0</span></p>
-  <button id="clearAll">Clear All</button>
-</div>
+        <p>Total Expenses: <span id="totalCount">0</span></p>
+        <button id="clearAll">Clear All</button>
+      </div>
 
-<input type="date" id="filterDate">
-
+      <div class="filters" style="display: flex; gap: 10px; margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px;">
+        <div style="flex: 1;">
+          <label style="font-size: 11px; color: #666; display: block; text-align: left;">Filter by Date:</label>
+          <input type="date" id="filterDate" style="width: 100%; padding: 5px; border-radius: 4px; border: 1px solid #ddd;">
+        </div>
+        <div style="flex: 1;">
+          <label style="font-size: 11px; color: #666; display: block; text-align: left;">Filter by Category:</label>
+          <select id="filterCategory" style="width: 100%; padding: 5px; border-radius: 4px; border: 1px solid #ddd;">
+            <option value="All">All Categories</option>
+            <option value="Food">Food</option>
+            <option value="Rent">Rent</option>
+            <option value="Travel">Travel</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
     </div>
 
-    <!-- Expense Form -->
     <div class="form-card">
       <h3>Add Expense</h3>
       <form id="expenseForm">
-        <input type="text" id="title" placeholder="Expense title" required>
-        <input type="number" id="amount" placeholder="Amount" required>
-        <button type="submit">Add Expense</button>
+        <input type="text" id="title" placeholder="Expense title" required style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ddd;">
+        <input type="number" id="amount" placeholder="Amount" required style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ddd;">
+        
+        <label style="font-size: 11px; color: #666; display: block; text-align: left;">Category:</label>
+        <select id="category" style="width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ddd;">
+          <option value="Food">Food</option>
+          <option value="Rent">Rent</option>
+          <option value="Travel">Travel</option>
+          <option value="Shopping">Shopping</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <button type="submit" style="width: 100%; padding: 10px; background: #059669; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Add Expense</button>
       </form>
     </div>
 
-    <!-- Expense List -->
     <div class="list-card">
       <h3>Expense History</h3>
       <ul id="expenseList"></ul>
